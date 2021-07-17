@@ -1,1 +1,1 @@
-rootProject.name = "twitch-chatbot-service"
+rootProject.name = "twitch-chat-bot-service"
