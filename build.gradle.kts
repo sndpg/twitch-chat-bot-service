@@ -14,19 +14,18 @@ group = "io.github.sykq"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+val twitchChatClientVersion = "0.0.1"
+
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("io.github.sykq:twitch-chat-client-spring-boot-starter:$twitchChatClientVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -48,4 +47,9 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
 }
