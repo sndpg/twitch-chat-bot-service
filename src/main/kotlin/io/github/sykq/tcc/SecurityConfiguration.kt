@@ -1,37 +1,34 @@
 package io.github.sykq.tcc
 
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
-import org.springframework.security.config.web.server.ServerHttpSecurity
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
-import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.provisioning.InMemoryUserDetailsManager
 
 @Configuration
-@EnableWebFluxSecurity
-class SecurityConfiguration {
+class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
-    @Bean
-    fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain? {
-        http.authorizeExchange { it.anyExchange().authenticated() }
-            .httpBasic().and()
-            .formLogin()
-        return http.build()
+    override fun configure(http: HttpSecurity) {
+        http.authorizeRequests { it.anyRequest().authenticated() }
+            .csrf { it.disable() }
+            .sessionManagement { it.disable() }
+            .httpBasic {}
+            .formLogin {}
     }
 
-    @Bean
-    fun userDetailsService(): MapReactiveUserDetailsService? {
+    override fun userDetailsService(): UserDetailsService {
         val user = User.builder()
             .passwordEncoder {
                 PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(it)
             }
             .username("user")
-            .password("password")
+            .password("")
             .roles("USER")
             .build()
-        return MapReactiveUserDetailsService(user)
+        return InMemoryUserDetailsManager(user)
     }
 
 }
