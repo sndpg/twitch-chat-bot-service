@@ -14,7 +14,7 @@ group = "io.github.sykq"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-val twitchChatClientVersion = "0.0.1"
+val twitchChatClientVersion = "0.0.1-SNAPSHOT"
 
 configurations {
     compileOnly {
