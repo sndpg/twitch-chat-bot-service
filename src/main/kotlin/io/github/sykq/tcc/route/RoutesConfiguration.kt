@@ -1,4 +1,4 @@
-package io.github.sykq.tcc.routes
+package io.github.sykq.tcc.route
 
 import io.github.sykq.tcc.TmiClient
 import org.springframework.context.annotation.Bean
