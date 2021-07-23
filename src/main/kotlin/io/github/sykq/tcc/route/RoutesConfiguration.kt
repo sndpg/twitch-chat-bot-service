@@ -1,6 +1,6 @@
 package io.github.sykq.tcc.route
 
-import io.github.sykq.tcc.TmiClient
+import io.github.sykq.tcc.bot.BotRegistry
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.server.ServerResponse
@@ -10,10 +10,12 @@ import org.springframework.web.reactive.function.server.router
 class RoutesConfiguration {
 
     @Bean
-    fun routerFunction(tmiClient: TmiClient) = router {
+    fun routerFunction(botRegistry: BotRegistry) = router {
         GET("/bots") {
-            tmiClient
-            ServerResponse.ok().bodyValue(mapOf("key" to "value"))
+            ServerResponse.ok().bodyValue(botRegistry.botNames)
+        }
+        GET("/bots/{botName}") {
+            ServerResponse.ok().bodyValue(botRegistry.bots[it.pathVariable("botName")]?.getProperties()!!)
         }
     }
 }

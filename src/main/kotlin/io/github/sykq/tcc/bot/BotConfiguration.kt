@@ -17,10 +17,15 @@ class BotConfiguration {
 
             override fun onConnect(session: TmiSession) {
                 session.join("sykq")
+                session.textMessage("sykq","connected")
             }
 
             override fun onMessage(session: TmiSession, message: TmiMessage) {
                 counter.getAndIncrement()
+            }
+
+            override fun getProperties(): Map<String, Any> {
+                return mapOf("messageCount" to counter.get())
             }
         }
     }
