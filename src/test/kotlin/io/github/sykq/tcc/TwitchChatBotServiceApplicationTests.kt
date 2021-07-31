@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest(
     properties = ["tmi.bots[0].name=testBot", "tmi.bots[0].username=testBot", "tmi.bots[0].password=secret"]
 )
-class TwitchChatBotServiceApplicationTests {
+internal class TwitchChatBotServiceApplicationTests {
 
     @Test
     fun contextLoads() {

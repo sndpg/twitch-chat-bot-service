@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger
 @Configuration
 class BotConfiguration {
 
-//    @Bean
+    @Bean
     fun messageCountingBot(): Bot {
         return object : Bot {
             lateinit var startTime: LocalDateTime
@@ -26,9 +26,9 @@ class BotConfiguration {
             override fun onConnect(session: ConfigurableTmiSession) {
                 session.tagCapabilities()
                 // manually join a channel; alternatively the channels member can be filled with all the channels which
+                session.join("sykq")
                 // should be joined when connecting
-                session.join("shenryyr")
-//                session.textMessage("sykq", "connected")
+                session.textMessage("connected")
                 startTime = LocalDateTime.now()
             }
 
@@ -65,9 +65,9 @@ class BotConfiguration {
             override fun onConnect(session: ConfigurableTmiSession) {
                 session.tagCapabilities()
                 // manually join a channel; alternatively the channels member can be filled with all the channels which
+                session.join("sykq")
                 // should be joined when connecting
-                session.join("shenryyr")
-//                session.textMessage("sykq", "connected")
+                session.textMessage("connected")
                 startTime = LocalDateTime.now()
             }
 
