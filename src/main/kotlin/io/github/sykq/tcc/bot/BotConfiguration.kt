@@ -7,6 +7,7 @@ import io.github.sykq.tcc.action.OnCommandAction
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import reactor.core.publisher.Flux
+import reactor.kotlin.core.publisher.toMono
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.atomic.AtomicInteger
@@ -35,8 +36,8 @@ class BotConfiguration {
             override fun onConnect(session: ConfigurableTmiSession) {
                 session.tagCapabilities()
                 // manually join a channel; alternatively the channels member can be filled with all the channels which
-                session.join("sykq")
                 // should be joined when connecting
+                session.join("sykq")
                 session.textMessage("connected")
                 startTime = LocalDateTime.now()
             }
@@ -81,20 +82,22 @@ class BotConfiguration {
             override fun onConnect(session: ConfigurableTmiSession) {
                 session.tagCapabilities()
                 // manually join a channel; alternatively the channels member can be filled with all the channels which
-                session.join("sykq")
                 // should be joined when connecting
-//                session.textMessage("connected")
+                session.join("sykq")
+                session.textMessage("connected")
                 startTime = LocalDateTime.now()
             }
 
             override fun onMessage(session: TmiSession, messages: Flux<TmiMessage>): Flux<TmiMessage> {
                 return messages.log()
-                    .doOnNext { showMessageCounterOnCommand(session, it) }
-                    .doOnNext {
-                        totalMessages.getAndIncrement()
-                        if (it.tags["subscriber"]?.contains("1") == true) {
-                            subscriberMessages.getAndIncrement()
-                        }
+                    .flatMap {
+                        Flux.merge(
+                            it.toMono()
+                                .doOnNext { message -> showMessageCounterOnCommand(session, message) },
+                            it.toMono()
+                                .doOnNext { totalMessages.getAndIncrement() }
+                                .filter { message -> message.tags["subscriber"]?.contains("1") == true }
+                                .doOnNext { subscriberMessages.getAndIncrement() })
                     }
             }
 
