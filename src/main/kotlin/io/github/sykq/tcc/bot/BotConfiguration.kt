@@ -91,6 +91,7 @@ class BotConfiguration {
             override fun onMessage(session: TmiSession, messages: Flux<TmiMessage>): Flux<TmiMessage> {
                 return messages.log()
                     .flatMap {
+                        // transformDeferred
                         Flux.merge(
                             it.toMono()
                                 .doOnNext { message -> showMessageCounterOnCommand(session, message) },
