@@ -91,7 +91,8 @@ class BotConfiguration {
             override fun onMessage(session: TmiSession, messages: Flux<TmiMessage>): Flux<TmiMessage> {
                 return messages.log()
                     .flatMap {
-                        // transformDeferred
+                        // we have to create a new publisher when sending a message, otherwise the message won't be sent
+                        // if the incoming message is not a subscriber message (since it will be filtered)
                         Flux.merge(
                             it.toMono()
                                 .doOnNext { message -> showMessageCounterOnCommand(session, message) },
