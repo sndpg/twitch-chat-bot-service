@@ -17,7 +17,6 @@ class BotConfiguration {
 
     @Bean
     fun messageCountingBot(): Bot {
-
         return object : Bot {
             lateinit var startTime: LocalDateTime
             val totalMessages: AtomicInteger = AtomicInteger(0)
