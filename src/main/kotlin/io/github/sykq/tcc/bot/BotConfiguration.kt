@@ -21,14 +21,6 @@ class BotConfiguration {
             lateinit var startTime: LocalDateTime
             val totalMessages: AtomicInteger = AtomicInteger(0)
             val subscriberMessages: AtomicInteger = AtomicInteger(0)
-            val showMessageCounterOnCommand = OnCommandAction("!messageCounter") {
-                textMessage(
-                    "counting for the last ${startTime.asUpTime().toMinutes()} minutes, ${totalMessages.get()} " +
-                            "messages have been recorded of which ${subscriberMessages.get()} were written by " +
-                            "subscribers of ${it.message.channel}. That's " +
-                            "${getMessagesPerMinute(totalMessages, startTime)} messages per minute."
-                )
-            }
 
             override val name: String = "messageCountingBot"
 
@@ -42,7 +34,14 @@ class BotConfiguration {
             }
 
             override fun onMessage(session: TmiSession, message: TmiMessage) {
-                showMessageCounterOnCommand(session, message)
+                session.onCommand("!messageCounter", message) {
+                    textMessage(
+                        "counting for the last ${startTime.asUpTime().toMinutes()} minutes, ${totalMessages.get()} " +
+                                "messages have been recorded of which ${subscriberMessages.get()} were written by " +
+                                "subscribers of ${it.message.channel}. That's " +
+                                "${getMessagesPerMinute(totalMessages, startTime)} messages per minute."
+                    )
+                }
                 totalMessages.getAndIncrement()
                 message.tags["subscriber"]?.also {
                     if (it.contains("1")) {
