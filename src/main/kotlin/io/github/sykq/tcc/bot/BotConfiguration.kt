@@ -61,8 +61,8 @@ class BotConfiguration {
     }
 
     @Bean
-    fun reactiveMessageCountingBot(): ReactiveBot {
-        return object : ReactiveBot {
+    fun reactiveMessageCountingBot(): PublishingBot {
+        return object : PublishingBot {
             lateinit var startTime: LocalDateTime
             val totalMessages: AtomicInteger = AtomicInteger(0)
             val subscriberMessages: AtomicInteger = AtomicInteger(0)
