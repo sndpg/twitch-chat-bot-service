@@ -7,7 +7,6 @@ import io.github.sykq.tcc.action.OnCommandAction
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import reactor.core.publisher.Flux
-import reactor.kotlin.core.publisher.toMono
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.atomic.AtomicInteger
@@ -88,16 +87,13 @@ class BotConfiguration {
 
             override fun onMessage(session: TmiSession, messages: Flux<TmiMessage>): Flux<TmiMessage> {
                 return messages.log()
-                    .flatMap {
-                        // we have to create a new publisher when sending a message, otherwise the message won't be sent
-                        // if the incoming message is not a subscriber message (since it will be filtered)
-                        Flux.merge(
-                            it.toMono()
-                                .doOnNext { message -> showMessageCounterOnCommand(session, message) },
-                            it.toMono()
-                                .doOnNext { totalMessages.getAndIncrement() }
-                                .filter { message -> message.tags["subscriber"]?.contains("1") == true }
-                                .doOnNext { subscriberMessages.getAndIncrement() })
+                    .map {
+                        showMessageCounterOnCommand(session, it)
+                        totalMessages.getAndIncrement()
+                        if(it.tags["subscriber"]?.contains("1") == true){
+                            subscriberMessages.getAndIncrement()
+                        }
+                        it
                     }
             }
 
