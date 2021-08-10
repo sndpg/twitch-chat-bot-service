@@ -42,11 +42,8 @@ class BotConfiguration {
                     )
                 }
                 totalMessages.getAndIncrement()
-                message.tags["subscriber"]?.also {
-                    if (it.contains("1")) {
-                        subscriberMessages.getAndIncrement()
-                    }
-                }
+                message.takeIf { it.isUserSubscribed() }
+                    .run { subscriberMessages.getAndIncrement() }
             }
 
             override fun getProperties(): Map<String, Any> {
@@ -90,9 +87,8 @@ class BotConfiguration {
                     .map {
                         showMessageCounterOnCommand(session, it)
                         totalMessages.getAndIncrement()
-                        if(it.tags["subscriber"]?.contains("1") == true){
-                            subscriberMessages.getAndIncrement()
-                        }
+                        it.takeIf { msg -> msg.isUserSubscribed() }
+                            .run { subscriberMessages.getAndIncrement() }
                         it
                     }
             }
