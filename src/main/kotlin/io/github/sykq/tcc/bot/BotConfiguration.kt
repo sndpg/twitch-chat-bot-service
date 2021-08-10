@@ -38,12 +38,12 @@ class BotConfiguration {
                         "counting for the last ${startTime.asUpTime().toMinutes()} minutes, ${totalMessages.get()} " +
                                 "messages have been recorded of which ${subscriberMessages.get()} were written by " +
                                 "subscribers of ${it.message.channel}. That's " +
-                                "${getMessagesPerMinute(totalMessages, startTime)} messages per minute."
+                                "${getFormattedMessagesPerMinute(totalMessages, startTime)} messages per minute."
                     )
                 }
                 totalMessages.getAndIncrement()
                 message.takeIf { it.isUserSubscribed() }
-                    .run { subscriberMessages.getAndIncrement() }
+                    ?.run { subscriberMessages.getAndIncrement() }
             }
 
             override fun getProperties(): Map<String, Any> {
@@ -67,11 +67,11 @@ class BotConfiguration {
                     "counting for the last ${startTime.asUpTime().toMinutes()} minutes, ${totalMessages.get()} " +
                             "messages have been recorded of which ${subscriberMessages.get()} were written by " +
                             "subscribers of ${it.message.channel}. That's " +
-                            "${getMessagesPerMinute(totalMessages, startTime)} messages per minute."
+                            "${getFormattedMessagesPerMinute(totalMessages, startTime)} messages per minute."
                 )
             }
 
-            override val name: String = "reactiveMessageCountingBot"
+            override val name: String = "publishingMessageCountingBot"
 
             override fun onConnect(session: ConfigurableTmiSession) {
                 session.tagCapabilities()
@@ -88,7 +88,7 @@ class BotConfiguration {
                         showMessageCounterOnCommand(session, it)
                         totalMessages.getAndIncrement()
                         it.takeIf { msg -> msg.isUserSubscribed() }
-                            .run { subscriberMessages.getAndIncrement() }
+                            ?.run { subscriberMessages.getAndIncrement() }
                         it
                     }
             }
@@ -108,6 +108,9 @@ class BotConfiguration {
 
     private fun getMessagesPerMinute(totalMessages: AtomicInteger, startTime: LocalDateTime): Double =
         totalMessages.get() / startTime.asUpTime().toMinutesExact()
+
+    private fun getFormattedMessagesPerMinute(totalMessages: AtomicInteger, startTime: LocalDateTime): String =
+        String.format("%.4f", getMessagesPerMinute(totalMessages, startTime))
 
     private fun Duration.toMinutesExact(): Double = toSeconds().toDouble() / 60
 
