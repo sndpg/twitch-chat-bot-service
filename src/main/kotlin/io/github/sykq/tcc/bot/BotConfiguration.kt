@@ -91,9 +91,10 @@ class BotConfiguration {
                     .map {
                         showMessageCounterOnCommand(session, it)
                         totalMessages.getAndIncrement()
-                        it.takeIf { msg -> msg.isUserSubscribed() }
-                            ?.run { subscriberMessages.getAndIncrement() }
-                        it
+                        it.apply {
+                            takeIf { msg -> msg.isUserSubscribed() }
+                                ?.run { subscriberMessages.getAndIncrement() }
+                        }
                     }
             }
 
