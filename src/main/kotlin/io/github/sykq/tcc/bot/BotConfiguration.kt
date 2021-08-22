@@ -24,11 +24,13 @@ class BotConfiguration {
             override val name: String = "messageCountingBot"
 
             override fun onConnect(session: ConfigurableTmiSession) {
+                // these could also be activated by setting the tmi.default-capabilities list within
+                // application.properties
                 session.tagCapabilities()
                 // manually join a channel; alternatively the channels member can be filled with all the channels which
                 // should be joined when connecting
                 session.join("sykq")
-                session.textMessage("connected")
+                session.textMessage("connected with default bot")
                 startTime = LocalDateTime.now()
             }
 
@@ -57,7 +59,7 @@ class BotConfiguration {
     }
 
     @Bean
-    fun reactiveMessageCountingBot(): PublishingBot {
+    fun publishingMessageCountingBot(): PublishingBot {
         return object : PublishingBot {
             lateinit var startTime: LocalDateTime
             val totalMessages: AtomicInteger = AtomicInteger(0)
@@ -74,11 +76,13 @@ class BotConfiguration {
             override val name: String = "publishingMessageCountingBot"
 
             override fun onConnect(session: ConfigurableTmiSession) {
+                // these could also be activated by setting the tmi.default-capabilities list within
+                // application.properties
                 session.tagCapabilities()
                 // manually join a channel; alternatively the channels member can be filled with all the channels which
                 // should be joined when connecting
                 session.join("sykq")
-                session.textMessage("connected")
+                session.textMessage("connected with publishing bot")
                 startTime = LocalDateTime.now()
             }
 
