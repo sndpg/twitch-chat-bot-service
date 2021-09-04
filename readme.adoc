@@ -1,0 +1,4 @@
+:icons: font
+= Twitch Chat Bot Service
+
+A sample Spring Boot Webservice showcasing some basic examples of how to create Twitch chat bots with the help of the https://github.com/sykq/twitch-chat-client[Twitch Chat Client] library.
