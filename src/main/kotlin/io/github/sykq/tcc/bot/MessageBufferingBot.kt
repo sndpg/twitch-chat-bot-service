@@ -9,7 +9,7 @@ import java.util.*
 @Component
 class MessageBufferingBot: Bot {
     override val name = "messageBufferingBot"
-    override val channels = listOf("shenryyr")
+    override val channels = listOf("sykq")
 
     private val messages = ArrayDeque<TmiMessage>(100)
 
